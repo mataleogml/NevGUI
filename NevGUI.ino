@@ -20,6 +20,7 @@ unsigned long audioStartMillis;
 bool audioPlaying = false;
 
 void setup() {
+  Serial.begin(9600);
   pinMode(buttonAPin, INPUT_PULLUP);
   pinMode(buttonBPin, INPUT_PULLUP);
   pinMode(doorSensorPin, INPUT_PULLUP);
@@ -35,18 +36,22 @@ void setup() {
 
 void loop() {
   // Stage 1 - Await Input
+  Serial.println("Stage 1: Awaiting input from Button A or Button B");
   while (!buttonAState) {
     buttonAState = digitalRead(buttonAPin) == LOW;
     buttonBState = digitalRead(buttonBPin) == LOW;
 
     if (buttonBState) {
+      Serial.println("Button B pressed, activating Click Switch Function");
       clickSwitch();
     }
   }
 
+  Serial.println("Button A pressed, moving to Stage 2");
   buttonAState = false;
 
   // Stage 2 - Play Audio
+  Serial.println("Stage 2: Playing audio");
   playAudio();
   audioPlaying = true;
 
@@ -60,20 +65,25 @@ void loop() {
   audioPlaying = false;
 
   // Stage 3 - Await Door Sensor
+  Serial.println("Stage 3: Awaiting Magnetic Door Sensor");
   while (!doorSensorState) {
     doorSensorState = digitalRead(doorSensorPin) == LOW;
   }
 
   doorSensorState = false;
+  Serial.println("Magnetic Door Sensor on, activating Click Switch Function");
+  clickSwitch();
 }
 
 void clickSwitch() {
-  myservo.write(15);
-  delay(500);
+  Serial.println("Click Switch Function: Moving servo motor forward and back");
+  myservo.write(90);
+  delay(00);
   myservo.write(0);
 }
 
 void playAudio() {
+  Serial.println("Play Audio Function: Playing random MP3 from DFPlayer Mini");
   digitalWrite(buttonAPin, HIGH);
   digitalWrite(buttonBPin, HIGH);
 
