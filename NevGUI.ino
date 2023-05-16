@@ -77,8 +77,8 @@ void loop() {
 
 void clickSwitch() {
   Serial.println("Click Switch Function: Moving servo motor forward and back");
-  myservo.write(90);
-  delay(00);
+  myservo.write(20);
+  delay(500);
   myservo.write(0);
 }
 
