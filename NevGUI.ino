@@ -2,12 +2,12 @@
 #include <SoftwareSerial.h>
 #include "DFRobotDFPlayerMini.h"
 
-#define buttonAPin 4
-#define buttonBPin 13
-#define doorSensorPin 5
-#define servoPin 12
+#define buttonAPin 8
+#define buttonBPin 7
+#define doorSensorPin 13
+#define servoPin 11
 
-SoftwareSerial mySerial(10, 11);
+SoftwareSerial mySerial(9, 10);
 DFRobotDFPlayerMini mp3;
 
 Servo myservo;
@@ -31,7 +31,7 @@ void setup() {
 
   mySerial.begin(9600);
   mp3.begin(mySerial);
-  mp3.volume(20);
+  mp3.volume(30);
 }
 
 void loop() {
@@ -89,9 +89,15 @@ void clickSwitch() {
 }
 
 void playAudio() {
-  Serial.println("Play Audio Function: Playing random MP3 from DFPlayer Mini");
+  Serial.println("Play Audio Function: Playing MP3 from DFPlayer Mini");
 
-  // Generate a random MP3 file number (assuming files are numbered from 1 to 3)
-  int randomMP3 = random(1, 4);
-  mp3.play(randomMP3);
+  static int currentMP3 = 1;  // Track the current MP3 file number
+
+  mp3.play(currentMP3);
+  currentMP3++;
+
+  if (currentMP3 > 9) {
+    currentMP3 = 1;  // Reset to 1 when reaching 9 to repeat the sequence
+  }
 }
+
