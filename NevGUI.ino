@@ -2,10 +2,10 @@
 #include <SoftwareSerial.h>
 #include "DFRobotDFPlayerMini.h"
 
-#define buttonAPin 2
-#define buttonBPin 3
-#define doorSensorPin 4
-#define servoPin 5
+#define buttonAPin 4
+#define buttonBPin 13
+#define doorSensorPin 5
+#define servoPin 12
 
 SoftwareSerial mySerial(10, 11);
 DFRobotDFPlayerMini mp3;
@@ -64,15 +64,20 @@ void loop() {
   mp3.stop();
   audioPlaying = false;
 
-  // Stage 3 - Await Door Sensor
-  Serial.println("Stage 3: Awaiting Magnetic Door Sensor");
-  while (!doorSensorState) {
-    doorSensorState = digitalRead(doorSensorPin) == LOW;
-  }
+  // Stage 3 - Enable Door Sensor and Activate Click Switch Function
+  Serial.println("Stage 3: Enabling Magnetic Door Sensor");
 
-  doorSensorState = false;
-  Serial.println("Magnetic Door Sensor on, activating Click Switch Function");
-  clickSwitch();
+  pinMode(doorSensorPin, INPUT_PULLUP);  // Enable door sensor
+
+  while (true) {
+    // Check if Magnetic Door Sensor is off
+    if (digitalRead(doorSensorPin) == HIGH) {
+      Serial.println("Magnetic Door Sensor off, activating Click Switch Function");
+      clickSwitch();
+      break;  // Exit the loop and move back to Stage 1
+    }
+  }
+  doorSensorState = true;  // Reset to inverted default state
 }
 
 void clickSwitch() {
@@ -80,14 +85,13 @@ void clickSwitch() {
   myservo.write(90);
   delay(500);
   myservo.write(0);
-    delay(500);
-
+  delay(500);
 }
 
 void playAudio() {
   Serial.println("Play Audio Function: Playing random MP3 from DFPlayer Mini");
-  digitalWrite(buttonAPin, HIGH);
-  digitalWrite(buttonBPin, HIGH);
 
-  mp3.play(rand() % 3 + 1);
+  // Generate a random MP3 file number (assuming files are numbered from 1 to 3)
+  int randomMP3 = random(1, 4);
+  mp3.play(randomMP3);
 }
