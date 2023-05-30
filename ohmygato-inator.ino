@@ -2,12 +2,12 @@
 #include <SoftwareSerial.h>
 #include "DFRobotDFPlayerMini.h"
 
-#define buttonAPin 8
-#define buttonBPin 7
-#define doorSensorPin 13
-#define servoPin 11
+#define buttonAPin 12
+#define buttonBPin 13
+#define doorSensorPin 8
+#define servoPin 9
 
-SoftwareSerial mySerial(9, 10);
+SoftwareSerial mySerial(10, 11);
 DFRobotDFPlayerMini mp3;
 
 Servo myservo;
@@ -82,7 +82,7 @@ void loop() {
 
 void clickSwitch() {
   Serial.println("Click Switch Function: Moving servo motor forward and back");
-  myservo.write(25);
+  myservo.write(40);
   delay(500);
   myservo.write(0);
   delay(500);
